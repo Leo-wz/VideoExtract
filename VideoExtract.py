@@ -1,21 +1,10 @@
 import os, subprocess, threading
-from tkinter import filedialog as fd
+from utils.get_dir import get_dir
+from utils.all_video_files import valid_files
 
 input('Press Enter to select a folder: ')
-input_path = fd.askdirectory()
-all_files = os.listdir(input_path)
-print('All files are below')
-full_path = []
-
-for item in all_files:
-    print(f'{item}')
-    full_path.append(os.path.join(input_path, item))
-
-input('Press Enter to select a folder to save the results: ')
-output_path = fd.askdirectory()
-
-# Prepare output folder
-if not os.path.exists(output_path): os.mkdir(output_path)
+input_path = get_dir()
+video_files = valid_files(input_path)
 
 def job(full_path, thread_num):
     os.system(f"echo Thread{thread_num} started")
@@ -26,8 +15,10 @@ def job(full_path, thread_num):
 
     os.system(f"echo Thread{thread_num} finished")
 
-for i in range(len(full_path)):
-    threading.Thread(target=job, args=(tuple(full_path),i)).start()
+input('Press Enter to select a folder to save the results: ')
+output_path = get_dir()
+
+for thread_num in range(len(video_files)):
+    threading.Thread(target=job, args=(tuple(video_files),thread_num)).start()
 
 print('Job finished, exit')
-exit()
