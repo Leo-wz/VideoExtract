@@ -11,5 +11,8 @@ def valid_files(path):
     videos = []
     for item in all_items:          # Sometimes extensions are in upper case
         if os.path.splitext(item)[1].lower() in valid_extensions:
-            videos.append(os.path.join(path, item))
-    return videos
+            videos.append(item)
+    if len(videos) == 0:
+        print('No valid video file found, exiting...')
+        quit()
+    else: return videos
